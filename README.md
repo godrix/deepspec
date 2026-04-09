@@ -3,32 +3,31 @@
 # DeepSpec 🖥️
 **SDD Framework: The Spec is the Solution.**
 
-DeepSpec is a zero-ceremony, AI-native Spec-Driven Development (SDD) framework. It eliminates architectural obesity and bureaucracy by acting as the "positronic brain" for your project, guiding both human developers and AI agents (like Cursor, Copilot, or Cline) from intention to implementation.
+DeepSpec is a zero-ceremony, AI-native Spec-Driven Development (SDD) framework. It eliminates architectural obesity and context degradation by acting as the "positronic brain" for your project. It guides AI agents (Cursor, Copilot, Cline) from intention to implementation without hallucination.
 
 ## The Philosophy
-- **Auto-Sizing:** Not every task needs architecture. DeepSpec automatically sizes tasks (`small`, `medium`, `large`). Small fixes skip the design phase entirely.
-- **Context Diet:** AI agents hallucinate when fed too much data. DeepSpec enforces a strict loading order (`kernel.md` -> `memory.md` -> `current-spec.md`) to keep the context window lean and focused.
-- **Zero Ceremony:** No endless subfolders. Just a flat `.deepspec` directory acting as the single source of truth.
+- **Context Diet:** AI agents hallucinate when fed too much data. DeepSpec enforces a strict loading order (`AGENTS.md` -> `memory.md` -> `active-spec`) and auto-archives old specs to keep the context window lean.
+- **Auto-Sizing:** Small fixes skip the design phase. DeepSpec automatically sizes tasks (`small`, `medium`, `large`).
+- **TDD by Default:** Acceptance criteria are strictly mapped to tests. The AI writes the test, watches it fail, and then writes the code.
+- **Zero Friction:** No manual YAML editing. You approve via chat, and the agent handles the file states.
 
 ## Project Structure
 ```text
 .deepspec/
-├── kernel.md       # The core (Tech stack, AI rules, project conventions)
-├── memory.md       # The hippocampus (ADRs, tech debt, past mistakes)
-└── specs/          # The lifecycle
-    ├── feature-a.md
-    └── bugfix-b.md
+├── AGENTS.md           # The core rules (Tech stack, AI constraints, formatting)
+├── memory.md           # The hippocampus (Strictly pruned ADRs, tech debt, "gotchas")
+└── specs/              # The lifecycle
+    ├── active/         # Specs currently in draft, approved, or in progress
+    └── archive/        # Completed specs (kept for history, ignored by AI context)
 ```
 
-## Installation (AI Agent Skill)
-DeepSpec doesn't require npm packages. It runs directly in your IDE's AI agent. 
-
-To install, add the skill located in `Skills/deep-spec/SKILL.md` to your preferred AI assistant.
+## Installation
+DeepSpec is an AI Agent Skill, not an npm package. 
+Copy the contents of `SKILL.md` into your AI assistant's system prompt or custom instructions (like `.cursorrules` or `.clinerules`).
 
 ## The Workflow
 1. **Trigger**: Tell your AI: *"Create a feature to [do X]"*.
-2. **Specify**: The AI creates the `.deepspec/specs/feature.md` file and infers the size.
-3. **Review**: You read the spec. If it looks good, change `status: draft` to `status: approved`.
-4. **Execute**: The AI writes the code strictly to pass the `[ACCEPTANCE]` criteria.
-5. **Close**: The AI marks the spec as `done` and links the commit/PR.
-```
+2. **Specify**: The AI creates the `.deepspec/specs/active/feature.md` file and infers the size.
+3. **Review**: You read the spec. Reply in chat: *"Looks good"*.
+4. **Execute**: The AI automatically updates the status, writes tests, and implements the code.
+5. **Close & Clean**: The AI moves the spec to the `archive/` folder and summarizes any new architectural decisions into `memory.md`.
